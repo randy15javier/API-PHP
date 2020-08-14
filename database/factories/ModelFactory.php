@@ -1,5 +1,9 @@
 <?php
 
+use App\Doctor;
+use App\Appointment_Detail;
+use App\Medical_Appointment;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -12,13 +16,35 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
-    static $password;
-
+$factory->define(Doctor::class, function (Faker\Generator $faker) {
+   
     return [
-        'name' => $faker->name,
+        'doctor_code' => $faker->numberBetween($min = 1, $max = 100),
+        'name' => $faker->firstNameMale,
+        'lastname' => $faker->lastName,
+        'telephone' => $faker->phoneNumber,
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(Medical_Appointment::class, function (Faker\Generator $faker) {
+   
+    return [
+        
+        'date' => $faker->date,
+        'time' => $faker->time,
+        'status' => $faker->randomElement([Medical_Appointment::CITA_ATENDIDA, Medical_Appointment::CITA_NO_ATENDIDA]),
+        'observation' => $faker->text($maxNbChars = 100),
+        'price' => $faker->numberBetween($min = 100, $max = 1000),
+        'patient' => $faker->name,
+    ];
+});
+
+$factory->define(Appointment_Detail::class, function (Faker\Generator $faker) {
+   
+    return [
+        
+        'id_doctor' => $faker->numberBetween(1, 100),
+        'id_appointment' => $faker->numberBetween(1, 100),
     ];
 });
